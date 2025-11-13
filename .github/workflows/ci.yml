@@ -103,16 +103,25 @@ jobs:
     steps:
       - name: Desplegar en EC2
         run: |
-          IMAGE_TAG=${{ github.run_number }}
-          FULL_IMAGE_NAME=${{ secrets.ECR_URI }}:$IMAGE_TAG
-
           echo "${{ secrets.EC2_KEY }}" > key.pem
           chmod 600 key.pem
 
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} << EOF
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
-            docker pull $FULL_IMAGE_NAME
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            IMAGE_TAG=${{ github.run_number }}
+            FULL_IMAGE_NAME=${{ secrets.ECR_URI }}:$IMAGE_TAG
+
+            echo "Logging into ECR..."
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+            docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
+
+            echo "Pulling new image..."
+            docker pull \$FULL_IMAGE_NAME
+
+            echo "Stopping and removing old container..."
             docker stop practica5 || true
             docker rm practica5 || true
-            docker run -d --name practica5 -p 80:3000 $FULL_IMAGE_NAME
+
+            echo "Running new container..."
+            docker run -d --name practica5 -p 80:3000 \$FULL_IMAGE_NAME
           EOF
+
