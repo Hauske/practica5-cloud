@@ -11,6 +11,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello, World!');
 });
 
-app.listen('0.0.0.0', () => {
-  console.log(`Server running at http://0.0.0.0:${port}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
