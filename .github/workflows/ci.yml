@@ -22,5 +22,5 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
-      - name: Verificar ejecución con ts-node
-        run: npx ts-node src/index.ts --help
+      - name: Validar compilación TypeScript
+        run: npm run build
