@@ -104,7 +104,7 @@ jobs:
       - name: Desplegar en EC2
         run: |
           IMAGE_TAG=${{ github.run_number }}
-          FULL_IMAGE_NAME=${{ secrets.ECR_URI }}:practica5-cloud:$IMAGE_TAG
+          FULL_IMAGE_NAME=${{ secrets.ECR_URI }}:$IMAGE_TAG
 
           echo "${{ secrets.EC2_KEY }}" > key.pem
           chmod 600 key.pem
