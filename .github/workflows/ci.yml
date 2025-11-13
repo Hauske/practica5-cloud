@@ -49,9 +49,12 @@ jobs:
           docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
 
       - name: Ensure ECR repository exists
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          aws ecr describe-repositories --repository-names practica5-cloud || \
-          aws ecr create-repository --repository-name practica5-cloud
+          aws ecr describe-repositories --repository-names practica5-cloud --region $AWS_REGION || \
+          aws ecr create-repository --repository-name practica5-cloud --region $AWS_REGION
+
 
       - name: Construir y subir imagen
         run: |
