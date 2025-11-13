@@ -86,11 +86,21 @@ jobs:
 
       - name: Construir y subir imagen Docker
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_URI: ${{ secrets.ECR_URI }}
         run: |
+          export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+          export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+          export AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
+          export AWS_REGION=$AWS_REGION
+          export ECR_URI=$ECR_URI
+
           IMAGE_NAME=practica5-cloud
           IMAGE_TAG=${{ github.run_number }}
-          FULL_IMAGE_NAME=${ECR_URI}/$IMAGE_NAME:$IMAGE_TAG
+          FULL_IMAGE_NAME=${ECR_URI}/${IMAGE_NAME}:${IMAGE_TAG}
 
           echo "Construyendo imagen Docker..."
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
