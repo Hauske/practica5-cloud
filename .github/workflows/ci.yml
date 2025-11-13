@@ -86,19 +86,14 @@ jobs:
 
       - name: Construir y subir imagen Docker
         run: |
-          IMAGE_NAME=practica5-cloud
           IMAGE_TAG=${{ github.run_number }}
-          FULL_IMAGE_NAME=${{ secrets.ECR_URI }}/$IMAGE_NAME:$IMAGE_TAG
+          FULL_IMAGE_NAME=${{ secrets.ECR_URI }}:$IMAGE_TAG
 
           echo "Construyendo imagen Docker..."
-          docker build -t $IMAGE_NAME:$IMAGE_TAG .
-
-          echo "Etiquetando imagen..."
-          docker tag $IMAGE_NAME:$IMAGE_TAG $FULL_IMAGE_NAME
+          docker build -t $FULL_IMAGE_NAME .
 
           echo "Subiendo imagen a ECR..."
           docker push $FULL_IMAGE_NAME
-
 
   deploy:
     name: Etapa de Deploy
